@@ -213,23 +213,10 @@ class Flux2Bindings {
   }
 
   static ffi.DynamicLibrary _openDynamicLibrary() {
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isMacOS) {
       return ffi.DynamicLibrary.process();
     }
-    if (Platform.isMacOS) {
-      final exePath = File(Platform.resolvedExecutable).parent.path;
-      final bundleLib = '$exePath/libflux2_wrapper.dylib';
-      if (File(bundleLib).existsSync()) {
-        return ffi.DynamicLibrary.open(bundleLib);
-      }
-      return ffi.DynamicLibrary.open('libflux2_wrapper.dylib');
-    }
-    if (Platform.isLinux) {
-      return ffi.DynamicLibrary.open('libflux2_wrapper.so');
-    }
-    if (Platform.isWindows) {
-      return ffi.DynamicLibrary.open('flux2_wrapper.dll');
-    }
+
     throw UnsupportedError('Unsupported platform');
   }
 }
